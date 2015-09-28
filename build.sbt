@@ -109,7 +109,7 @@ lazy val root = project.in(file("."))
         |import io.finch.response._
       """.stripMargin
   )
-  .aggregate(core, argonaut, jackson, json4s, circe, benchmarks, petstore)
+  .aggregate(core, argonaut, jackson, json4s, circe, static, benchmarks, petstore)
   .dependsOn(core, circe)
 
 lazy val core = project
@@ -170,6 +170,11 @@ lazy val circe = project
   )
   .dependsOn(core, test % "test")
 
+lazy val static = project
+  .settings(moduleName := "finch-static")
+  .settings(allSettings)
+  .dependsOn(core, test % "test")
+
 lazy val benchmarks = project
   .settings(moduleName := "finch-benchmarks")
   .settings(allSettings)
@@ -204,5 +209,6 @@ lazy val benchmarks = project
     jackson,
     json4s,
     circe,
+    static,
     test % "it"
   )
