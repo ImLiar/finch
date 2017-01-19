@@ -368,6 +368,13 @@ trait Endpoints {
     option(items.ParamItem(name))(i => requestParams(name)(i))
 
   /**
+   * An evaluating [[Endpoint]] that reads all query-string parameters from request into
+   * a `Seq`. Resulting `Seq` could be empty if there is no parameters.
+   */
+  def paramsAll: Endpoint[Seq[(String, String)]] =
+    option(items.ParamItems)(req => req.params.keysIterator.flatMap(k => req.params.getAll(k).map(k -> _)).toSeq)
+
+  /**
    * An evaluating [[Endpoint]] that reads a required multi-value query-string param `name`
    * from the request into a `NonEmptyList` or raises a [[Error.NotPresent]] exception
    * when the params are missing or empty.
@@ -399,6 +406,13 @@ trait Endpoints {
    */
   def headerExists(name: String): Endpoint[String] =
     exists(items.HeaderItem(name))(requestHeader(name))
+
+  /**
+   * An evaluating [[Endpoint]] that reads all headers from request into
+   * a `Seq`. Resulting `Seq` could be empty if there is no headers.
+   */
+  def headersAll: Endpoint[Seq[(String, String)]] =
+    option(items.HeaderItems)(_.headerMap.toSeq)
 
   /**
    * An evaluating [[Endpoint]] that reads a binary request body, interpreted as a `Array[Byte]`,

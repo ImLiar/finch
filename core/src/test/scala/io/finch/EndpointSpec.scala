@@ -389,4 +389,18 @@ class EndpointSpec extends FinchSpec {
       endpoint(Input.get("/index", "testEndpoint" -> "a")).awaitValueUnsafe(10.seconds)
     )
   }
+
+  it should "return all parameters from request with paramsAll" in {
+    val endpoint: Endpoint[Seq[(String, String)]] = paramsAll
+    val ps = Seq("a" -> "b", "c" -> "d", "c" -> "e")
+    endpoint(Input.get("/", ps: _*)).awaitValueUnsafe() shouldBe Some(ps)
+    endpoint(Input.get("/")).awaitValueUnsafe() shouldBe Some(Seq())
+  }
+
+  it should "return all headers from request with headersAll" in {
+    val endpoint: Endpoint[Seq[(String, String)]] = headersAll
+    val ps = Seq("a" -> "b", "c" -> "d")
+    endpoint(Input.get("/").withHeaders(ps: _*)).awaitValueUnsafe() shouldBe Some(ps)
+    endpoint(Input.get("/")).awaitValueUnsafe() shouldBe Some(Seq())
+  }
 }

@@ -15,6 +15,8 @@ package object finch extends Endpoints with Outputs with ValidationRules {
     final case class ParamItem(name: String) extends RequestItem("param", Some(name))
     final case class HeaderItem(name: String) extends RequestItem("header", Some(name))
     final case class CookieItem(name: String) extends RequestItem("cookie", Some(name))
+    case object ParamItems extends RequestItem("params")
+    case object HeaderItems extends RequestItem("headers")
     case object BodyItem extends RequestItem("body")
     case object MultipleItems extends RequestItem("request")
   }
